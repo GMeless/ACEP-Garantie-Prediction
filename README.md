@@ -214,9 +214,9 @@ expm1() → Montant en FCFA
 
 ## 👤 Auteur
 
-**[Votre Nom]**  
+** GNAGNE MELESS M **  
 Master 2 Ingénierie Data – ISM Paris  
-Promotion 2026  
+Promotion 2024 / ISMD 26  
 
 ---
 
