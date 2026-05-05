@@ -1,0 +1,21 @@
+# =============================================================
+# requirements.txt — ACEP Garantie Prédiction
+# Mémoire M2 ISM Paris — ACEP Burkina
+# Versions exactes testées et validées
+# =============================================================
+
+# Interface utilisateur
+streamlit==1.56.0
+
+# Machine Learning
+xgboost==3.2.0
+scikit-learn==1.8.0
+joblib==1.5.3
+
+# Data manipulation
+pandas==3.0.2
+numpy==2.4.4
+
+# Lecture/écriture Excel
+openpyxl==3.1.5
+xlrd==2.0.2

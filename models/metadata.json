@@ -1,0 +1,52 @@
+{
+    "date_sauvegarde": "2026-05-05T13:14:38.166680",
+    "modele": "XGBRegressor",
+    "parametres_modele": {
+        "n_estimators": 300,
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "random_state": 42
+    },
+    "variable_cible": "LOG_MONTANT_GARANTIE",
+    "nb_features": 24,
+    "features": [
+        "AGE_CLIENT",
+        "DUREE_CREDIT",
+        "ANCIENNETE_CLIENT_JOUR_CREDIT",
+        "LOG_MONTANT_CREDIT",
+        "LIBELLE_GARANTIE_FREQ",
+        "GENRE_DU_CLIENT_MASCULIN",
+        "GENRE_DU_CLIENT_SOCIETE",
+        "TYPE_EMPRUNTEUR_TPE",
+        "PROPRIETAIRE_DE_LA_GARANTIE_OUI",
+        "PROFESSION_GROUPE_AUTRE",
+        "PROFESSION_GROUPE_CHAUFFEUR",
+        "PROFESSION_GROUPE_COIFFEUSE",
+        "PROFESSION_GROUPE_COMMERCANT",
+        "PROFESSION_GROUPE_COUTURIER",
+        "PROFESSION_GROUPE_INSTITUTEUR",
+        "PROFESSION_GROUPE_MECANICIEN",
+        "PROFESSION_GROUPE_MENAGERE",
+        "PROFESSION_GROUPE_MENUISIER",
+        "PROFESSION_GROUPE_NON_DEFINI",
+        "PROFESSION_GROUPE_PROFESSEUR",
+        "PROFESSION_GROUPE_RESTAURATEUR",
+        "PROFESSION_GROUPE_SOUDEUR",
+        "PROFESSION_GROUPE_TAILLEUR",
+        "PROFESSION_GROUPE_TRANSPORTEUR"
+    ],
+    "colonnes_scalees": [
+        "AGE_CLIENT",
+        "DUREE_CREDIT",
+        "ANCIENNETE_CLIENT_JOUR_CREDIT",
+        "LOG_MONTANT_CREDIT",
+        "LIBELLE_GARANTIE_FREQ"
+    ],
+    "metriques": {
+        "MAE": 0.286,
+        "RMSE": 0.397,
+        "R2": 0.812
+    }
+}

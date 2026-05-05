@@ -1,0 +1,22 @@
+# Environnement virtuel
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Données sensibles (trop lourdes pour GitHub)
+data/
+*.csv
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Modèles lourds (optionnel - si tu veux les exclure)
+# models/
