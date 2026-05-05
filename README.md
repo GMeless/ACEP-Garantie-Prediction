@@ -1,6 +1,6 @@
 # 🏦 ACEP – Prédiction du Montant de Garantie de Crédit
 
-> **Projet de fin d'études M2 Ingénierie Data – ISM Paris (2026)**  
+> **Projet de fin d'études M2 Ingénierie Data – ISM Paris (2024) Mise A Jour 2026**  
 > Institution partenaire : **ACEP Burkina Faso** (microfinance)
 
 ---
