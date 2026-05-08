@@ -1,7 +1,7 @@
 # =============================================================
-# streamlit_app.py — Interface ACEP Garantie
-# Application de prédiction du montant des garanties de crédit
-# Mémoire M2 ISM Paris — ACEP Burkina
+# streamlit_app.py — Interface Prédiction Garanties de Crédit
+# Application de prédiction du montant des garanties
+# Mémoire M2 ISM Paris — Microfinance
 # =============================================================
 
 import streamlit as st
@@ -12,10 +12,10 @@ import sys
 from io import BytesIO
 
 # =============================================================
-# CONFIGURATION DE LA PAGE (doit être le 1er appel Streamlit)
+# CONFIGURATION DE LA PAGE
 # =============================================================
 st.set_page_config(
-    page_title="ACEP — Prédiction Garanties",
+    page_title="Prédiction Garanties — Microfinance",
     page_icon="🏦",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -23,7 +23,6 @@ st.set_page_config(
 
 # =============================================================
 # IMPORT DU MODULE DE PREPROCESSING
-# Ce fichier est dans app/, on ajoute app/ au path Python
 # =============================================================
 APP_DIR  = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(APP_DIR)
@@ -40,37 +39,10 @@ from preprocessing import (
 )
 
 # =============================================================
-# CSS PERSONNALISÉ — Style professionnel ACEP
+# CSS PERSONNALISÉ
 # =============================================================
 st.markdown("""
     <style>
-        /* Couleurs ACEP */
-        :root {
-            --acep-vert:    #2ECC71;
-            --acep-bleu:    #1A535C;
-            --acep-gris:    #F4F6F7;
-        }
-
-        /* Header principal */
-        .header-box {
-            background: linear-gradient(135deg, #1A535C, #2ECC71);
-            padding: 20px 30px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        .header-box h1 {
-            color: white;
-            font-size: 1.8em;
-            margin: 0;
-        }
-        .header-box p {
-            color: #e8f8f5;
-            margin: 5px 0 0 0;
-            font-size: 0.95em;
-        }
-
-        /* Carte résultat */
         .result-card {
             background: linear-gradient(135deg, #1A535C, #117A65);
             border-radius: 12px;
@@ -94,8 +66,6 @@ st.markdown("""
             color: #D5F5E3;
             font-size: 0.85em;
         }
-
-        /* Info box */
         .info-box {
             background: #EBF5FB;
             border-left: 4px solid #2ECC71;
@@ -104,8 +74,6 @@ st.markdown("""
             margin: 10px 0;
             font-size: 0.9em;
         }
-
-        /* Bouton principal */
         .stButton > button {
             background: linear-gradient(135deg, #1A535C, #2ECC71);
             color: white;
@@ -120,31 +88,24 @@ st.markdown("""
         .stButton > button:hover {
             opacity: 0.9;
         }
-
-        /* Masquer le footer Streamlit */
         footer {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
 
 # =============================================================
-# HEADER
+# HEADER — Sans logo (confidentialité)
 # =============================================================
-LOGO_PATH = os.path.join(BASE_DIR, "assets", "logo_acep.png")
-
-col_logo, col_titre = st.columns([1, 4])
-with col_logo:
-    if os.path.exists(LOGO_PATH):
-        st.image(LOGO_PATH, width=120)
-with col_titre:
-    st.markdown("""
-        <div style="padding-top:10px;">
-            <h1 style="color:#1A535C; margin:0;">Système de Prédiction des Garanties</h1>
-            <p style="color:#555; margin:4px 0 0 0;">
-                ACEP Burkina — Outil d'aide à la décision pour les agents de crédit
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
+st.markdown("""
+    <div style="padding: 20px 0px 10px 0px;">
+        <h1 style="color:#1A535C; margin:0;">
+            🏦 Système de Prédiction des Garanties de Crédit
+        </h1>
+        <p style="color:#555; margin:4px 0 0 0;">
+            Outil d'aide à la décision pour les agents de crédit — Microfinance
+        </p>
+    </div>
+""", unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -171,23 +132,28 @@ with onglet1:
         </div>
     """, unsafe_allow_html=True)
 
-    # ----------------------------------------------------------
     # FORMULAIRE — 3 colonnes
-    # ----------------------------------------------------------
     col1, col2, col3 = st.columns(3)
 
     with col1:
         st.markdown("**👤 Informations client**")
 
-        age_client = st.number_input(
-            "Âge du client (années)",
-            min_value=18, max_value=100, value=18, step=1
-        )
         genre = st.selectbox(
             "Genre du client",
             options=GENRES,
             index=0
         )
+
+        # Si SOCIETE → âge non applicable
+        if genre == "SOCIETE":
+            st.info("ℹ️ Client Société — âge non applicable")
+            age_client = 0
+        else:
+            age_client = st.number_input(
+                "Âge du client (années)",
+                min_value=18, max_value=100, value=35, step=1
+            )
+
         profession = st.selectbox(
             "Profession",
             options=PROFESSIONS_CONNUES,
@@ -204,10 +170,10 @@ with onglet1:
 
         montant_credit = st.number_input(
             "Montant du crédit (FCFA)",
-            min_value=50_000,
+            min_value=500_000,
             max_value=100_000_000,
             value=1_000_000,
-            step=50_000,
+            step=100_000,
             format="%d"
         )
         duree_credit = st.number_input(
@@ -241,19 +207,13 @@ with onglet1:
 
     st.markdown("")
 
-    # ----------------------------------------------------------
     # BOUTON DE PRÉDICTION
-    # ----------------------------------------------------------
     col_btn, col_vide = st.columns([1, 2])
     with col_btn:
         predict_btn = st.button("🔮  Calculer le montant de garantie")
 
-    # ----------------------------------------------------------
     # RÉSULTAT
-    # ----------------------------------------------------------
     if predict_btn:
-
-        # Validation de base
         if date_adhesion >= date_accord:
             st.error("❌ La date d'adhésion doit être antérieure à la date d'accord du crédit.")
         else:
@@ -287,14 +247,14 @@ with onglet1:
                         </div>
                     """, unsafe_allow_html=True)
 
-                    # Détails supplémentaires
+                    # Métriques
                     st.markdown("")
                     c1, c2, c3 = st.columns(3)
                     c1.metric("Ancienneté client", f"{resultat['anciennete_calculee']} jours")
                     c2.metric("Montant crédit",    f"{montant_credit:,.0f} FCFA")
                     c3.metric("Ratio garantie",    f"{ratio:.1f}%")
 
-                    st.success("✅ Prédiction réalisée avec succès par le modèle XGBoost (R² = 0.81)")
+                    st.success("✅ Prédiction réalisée avec succès par le modèle XGBoost (R² = 0.812)")
 
                 except Exception as e:
                     st.error(f"❌ Erreur lors de la prédiction : {e}")
@@ -309,13 +269,12 @@ with onglet2:
     st.markdown("""
         <div class="info-box">
             💡 Uploadez un fichier Excel contenant plusieurs clients.
-            L'application ajoutera automatiquement la colonne <strong>GARANTIE_PREDITE (FCFA)</strong>.
+            L'application ajoutera automatiquement la colonne
+            <strong>GARANTIE_PREDITE (FCFA)</strong>.
         </div>
     """, unsafe_allow_html=True)
 
-    # ----------------------------------------------------------
     # FORMAT ATTENDU
-    # ----------------------------------------------------------
     with st.expander("📌 Voir le format Excel attendu"):
         st.markdown("Le fichier Excel doit contenir **exactement ces colonnes** :")
         colonnes_attendues = pd.DataFrame({
@@ -327,18 +286,20 @@ with onglet2:
                 "PROFESSION_DU_CLIENT"
             ],
             "Format": [
-                "Entier (ex: 25)", "Entier en mois (ex: 12)", "Entier en FCFA (ex: 1500000)",
+                "Entier (ex: 35)", "Entier en mois (ex: 12)",
+                "Entier en FCFA (ex: 1500000)",
                 "JJ/MM/AAAA", "JJ/MM/AAAA",
-                "Texte (ex: MOTOCYCLETTE)", "MASCULIN / FEMININ / SOCIETE",
+                "Texte (ex: MOTOCYCLETTE)",
+                "MASCULIN / FEMININ / SOCIETE",
                 "TPE / AUTRE", "OUI / NON",
                 "Texte (ex: COMMERCANT)"
             ]
         })
         st.dataframe(colonnes_attendues, use_container_width=True, hide_index=True)
 
-        # Bouton pour télécharger un fichier exemple
+        # Fichier exemple
         exemple = pd.DataFrame([{
-            "AGE_CLIENT": 18,
+            "AGE_CLIENT": 35,
             "DUREE_CREDIT": 12,
             "MONTANT_DU_CREDIT": 1500000,
             "DATE_ADHESION_CLIENT": "01/01/2018",
@@ -350,7 +311,7 @@ with onglet2:
             "PROFESSION_DU_CLIENT": "COMMERCANT"
         }, {
             "AGE_CLIENT": 42,
-            "DUREE_CREDIT": 24,
+            "DUREE_CREDIT": 12,
             "MONTANT_DU_CREDIT": 3000000,
             "DATE_ADHESION_CLIENT": "05/06/2015",
             "DATE_ACCORD_DU_CREDIT": "10/01/2023",
@@ -366,15 +327,13 @@ with onglet2:
         st.download_button(
             label="⬇️ Télécharger un fichier exemple",
             data=buffer.getvalue(),
-            file_name="exemple_clients_acep.xlsx",
+            file_name="exemple_clients_garanties.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
     st.markdown("")
 
-    # ----------------------------------------------------------
-    # UPLOAD DU FICHIER
-    # ----------------------------------------------------------
+    # UPLOAD
     fichier = st.file_uploader(
         "📂 Choisir le fichier Excel",
         type=["xlsx", "xls"],
@@ -387,26 +346,21 @@ with onglet2:
             st.success(f"✅ Fichier chargé : {len(df_input)} client(s) détecté(s)")
             st.dataframe(df_input.head(5), use_container_width=True)
 
-            # Bouton de traitement
             if st.button("🔮  Lancer la prédiction pour tous les clients"):
                 with st.spinner(f"Calcul en cours pour {len(df_input)} client(s)..."):
                     try:
                         df_resultat = predire_batch(df_input)
-
                         st.success(f"✅ Prédictions terminées pour {len(df_resultat)} client(s) !")
                         st.dataframe(df_resultat, use_container_width=True)
 
-                        # Téléchargement des résultats
                         buffer_result = BytesIO()
                         df_resultat.to_excel(buffer_result, index=False)
-
                         st.download_button(
                             label="⬇️ Télécharger les résultats Excel",
                             data=buffer_result.getvalue(),
-                            file_name="predictions_garanties_acep.xlsx",
+                            file_name="predictions_garanties.xlsx",
                             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         )
-
                     except Exception as e:
                         st.error(f"❌ Erreur lors du traitement : {e}")
 
@@ -415,13 +369,9 @@ with onglet2:
 
 
 # =============================================================
-# SIDEBAR — Informations sur le modèle
+# SIDEBAR
 # =============================================================
 with st.sidebar:
-    if os.path.exists(LOGO_PATH):
-        st.image(LOGO_PATH, width=150)
-
-    st.markdown("---")
     st.markdown("### 📊 Informations modèle")
     st.markdown("""
     | Paramètre | Valeur |
@@ -444,10 +394,10 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### ℹ️ À propos")
     st.markdown("""
-    Application développée dans le cadre du
-    **Mémoire M2 — ISM Paris **
+    Application développée dans le cadre d'un
+    **Mémoire M2 Ingénierie Data — ISM Paris**
 
     Domaine : Microfinance / Data Science
 
-    *ACEP Burkina — 2026 MAJ *
+    *Mise à jour 2026*
     """)
