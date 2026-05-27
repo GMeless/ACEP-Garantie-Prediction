@@ -19,3 +19,7 @@ numpy==2.4.4
 # Lecture/écriture Excel
 openpyxl==3.1.5
 xlrd==2.0.2
+
+### MISE A JOUR  #############
+
+rapidfuzz==3.14.5
