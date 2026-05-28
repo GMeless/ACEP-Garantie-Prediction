@@ -54,22 +54,51 @@ def normalize_text(text):
     text = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8")
 
     corrections = {
-        "MOTOCYCLE"             : "MOTOCYCLETTE",
-        "VELOMOTEUR"            : "MOTOCYCLETTE",
-        "REFRIGERRATEUR"        : "REFRIGERATEUR",
-        "REFRIGERATEURS"        : "REFRIGERATEUR",
-        "CONGELATEURS"          : "CONGELATEUR",
-        "TELEVISEURS"           : "TELEVISEUR",
-        "FAUTEUIL"              : "FAUTEUILS",
-        "CHAISE"                : "CHAISES",
-        "TABLES"                : "TABLE",
-        "VOITURES"              : "VOITURE",
-        "CAMIONS"               : "CAMION",
-        "ORDINATEURS"           : "ORDINATEUR",
-        "MACHINES A COUDRES"    : "MACHINE A COUDRE",
-        "MACHINE A COUDRES"     : "MACHINE A COUDRE",
-        "STOCK DE MARCHANDISES" : "STOCK DE MARCHANDISE",
-    }
+    # Motocyclette et variantes
+    "MOTOCYCLE"             : "MOTOCYCLETTE",
+    "MOTOYCLE"              : "MOTOCYCLETTE",
+    "MOTOCYLE"              : "MOTOCYCLETTE",
+    "MOTOCYCLET"            : "MOTOCYCLETTE",
+    "MOTOCYCLETES"          : "MOTOCYCLETTE",
+    "MOTOCYCLETTES"         : "MOTOCYCLETTE",
+    "MOTO"                  : "MOTOCYCLETTE",
+    "MOTOS"                 : "MOTOCYCLETTE",
+    "VELOMOTEUR"            : "MOTOCYCLETTE",
+    "VELOMOTEURS"           : "MOTOCYCLETTE",
+    "BICYCLETTE"            : "VELOMOTEUR",
+    "VELO"                  : "VELOMOTEUR",
+
+    # Réfrigérateur et variantes
+    "REFRIGERRATEUR"        : "REFRIGERATEUR",
+    "REFRIGERATEURS"        : "REFRIGERATEUR",
+    "FRIGIDAIRE"            : "REFRIGERATEUR",
+    "FRIGIDAIRES"           : "REFRIGERATEUR",
+    "FRIGO"                 : "REFRIGERATEUR",
+    "FRIGOS"                : "REFRIGERATEUR",
+
+    # Télévision et variantes
+    "TELEVISEURS"           : "TELEVISEUR",
+    "TELEVISUR"             : "TELEVISEUR",
+    "TELIVISEUR"            : "TELEVISEUR",
+    "TELE"                  : "TELEVISEUR",
+    "TELES"                 : "TELEVISEUR",
+    "TV"                    : "TELEVISEUR",
+
+    # Congélateur
+    "CONGELATEURS"          : "CONGELATEUR",
+
+    # Autres
+    "FAUTEUIL"              : "FAUTEUILS",
+    "CHAISE"                : "CHAISES",
+    "TABLES"                : "TABLE",
+    "VOITURES"              : "VOITURE",
+    "CAMIONS"               : "CAMION",
+    "ORDINATEURS"           : "ORDINATEUR",
+    "MACHINES A COUDRES"    : "MACHINE A COUDRE",
+    "MACHINE A COUDRES"     : "MACHINE A COUDRE",
+    "STOCK DE MARCHANDISES" : "STOCK DE MARCHANDISE",
+}
+    
     text = corrections.get(text, text)
     text = re.sub(r"[^A-Z0-9\s]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
@@ -86,7 +115,7 @@ def fuzzy_clean(libelle: str) -> str:
         fuzzy_references,
         scorer=fuzz.token_sort_ratio,
         processor=utils.default_process,
-        score_cutoff=75
+        score_cutoff=50
     )
     return resultat[0] if resultat else norm
 

@@ -125,11 +125,8 @@ st.markdown("""
     <div style="padding: 20px 0px 10px 0px;">
         <h1 style="color:#1A535C; margin:0;">
             🏦 Système de Prédiction des Garanties de Crédit
-        </h1>
-        <p style="color:#555; margin:4px 0 0 0;">
-            Outil d'aide à la décision — Microfinance | Version 2.0 — 2026
-        </p>
-    </div>
+        
+<p>Outil d'aide à la décision pour les agents de crédit en Microfinance </div>
 """, unsafe_allow_html=True)
 
 st.markdown("---")
@@ -488,7 +485,7 @@ with st.sidebar:
     - ✅ Jusqu'à **10 garanties** par dossier
     - ✅ **Fuzzy Matching** automatique
     - ✅ Indicateur de **couverture** (≥ 100%)
-    - ✅ Ratio médian ACEP : **108.7%**
+    - ✅ Ratio médian Microfinance : **108.7%**
     """)
 
     st.markdown("---")
