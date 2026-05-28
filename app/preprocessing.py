@@ -63,10 +63,12 @@ def normalize_text(text):
     "MOTOCYCLETTES"         : "MOTOCYCLETTE",
     "MOTO"                  : "MOTOCYCLETTE",
     "MOTOS"                 : "MOTOCYCLETTE",
-    "VELOMOTEUR"            : "MOTOCYCLETTE",
-    "VELOMOTEURS"           : "MOTOCYCLETTE",
-    "BICYCLETTE"            : "VELOMOTEUR",
-    "VELO"                  : "VELOMOTEUR",
+    "VELEMOTEUR"            : "VELOMOTEUR",
+    "VELOMOTEURS"           : "VELOMOTEUR",
+    "VELO MOTEUR"           : "VELOMOTEUR",
+    "VELOMOTTEUR"           : "VELOMOTEUR",
+    "BICYCLETTE"            : "BICYCLETTE",
+    "VELO"                  : "BICYCLETTE",
 
     # Réfrigérateur et variantes
     "REFRIGERRATEUR"        : "REFRIGERATEUR",
