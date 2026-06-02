@@ -1,4 +1,4 @@
-# 🏦 ACEP – Prédiction du Montant de Garantie de Crédit
+# 🏦 Prédiction du Montant Total des Garanties de Crédit
 
 > ⚠️ **PROJET CONFIDENTIEL**  
 > Toute modification, reproduction ou utilisation commerciale est strictement  
@@ -8,81 +8,89 @@
 ---
 
 > **Mémoire de fin d'études — M2 Ingénierie Data — ISM Paris (2024)**  
-> **Mise à jour déploiement — ISMD 26 (2026)**  
-> Institution partenaire : **ACEP Burkina Faso** (microfinance)
+> **Mise à jour modèle et déploiement — ISMD 26 (2026)**  
+> Secteur : **Microfinance** | Données confidentielles — institution partenaire
 
 ---
 
 ## 🌐 Application en ligne
 
 🚀 **Accéder à l'application :**  
-👉 [https://acep-garantie-prediction.streamlit.app](https://acep-garantie-prediction.streamlit.app)
+👉 [https://garantie-credit-prediction.streamlit.app](https://garantie-credit-prediction.streamlit.app)
 
 📂 **Code source GitHub :**  
-👉 [https://github.com/GMeless/ACEP-Garantie-Prediction](https://github.com/GMeless/ACEP-Garantie-Prediction)
+👉 [https://github.com/GMeless/Garantie-Credit-Prediction](https://github.com/GMeless/Garantie-Credit-Prediction)
 
 ---
 
 ## 📋 Présentation
 
-Ce projet développe un modèle de Machine Learning pour **prédire le montant de garantie**
-requis lors d'une demande de crédit dans une institution de microfinance.
+Ce projet développe un modèle de Machine Learning pour **prédire le montant total
+des garanties** requis lors d'une demande de crédit dans une institution de microfinance.
 
-L'objectif est d'aider les agents de crédit à disposer d'une estimation objective,
-cohérente et rapide du niveau de garantie à exiger d'un client, réduisant ainsi
+L'objectif est d'aider les agents de crédit à évaluer si l'ensemble des biens proposés
+en garantie couvre suffisamment le montant du crédit demandé, réduisant ainsi
 la subjectivité dans la prise de décision.
 
 ---
 
 ## 🎯 Problématique
 
-Dans une institution de microfinance comme ACEP Burkina Faso, le montant de garantie
-exigé peut varier selon l'agent de crédit, le profil du client et les pratiques locales.
-Ce projet vise à **standardiser et objectiver** cette décision grâce au Machine Learning,
-en s'appuyant sur **184 810 observations historiques**.
+Dans une institution de microfinance, le montant total des garanties exigé peut varier
+selon l'agent de crédit, le profil du client et les pratiques locales. Ce projet vise
+à **standardiser et objectiver** cette décision grâce au Machine Learning, en s'appuyant
+sur **184 810 observations** regroupées en **45 317 dossiers**.
 
 ---
 
-## 📊 Résultats du Modèle
+## 🔄 Versions du projet
 
-| Modèle              | MAE       | RMSE      | R²        |
-|---------------------|-----------|-----------|-----------|
-| Régression Linéaire | 0.625     | 0.817     | 0.325     |
-| Arbre de Décision   | 0.376     | 0.514     | 0.611     |
-| Random Forest       | 0.307     | 0.432     | 0.735     |
-| **XGBoost ✅**      | **0.286** | **0.397** | **0.812** |
+### Version 1 (2024) — Approche individuelle
+Prédiction de la valeur marchande d'**un bien individuel** fourni en garantie.
 
-> Le modèle **XGBoost** est retenu comme modèle final **(R² = 0.812)**.  
-> Variable cible : `LOG_MONTANT_GARANTIE` (logarithme du montant de garantie en FCFA).
+### Version 2 (2026) — Approche agrégée par dossier ✅ ACTUELLE
+Prédiction du **montant total des garanties** d'un dossier complet, avec indicateur
+de couverture du crédit.
+
+---
+
+## 📊 Résultats des modèles
+
+### Comparaison V1 vs V2
+
+| Modèle | MAE V1 | MAE V2 | R² V1 | R² V2 |
+|--------|--------|--------|-------|-------|
+| Régression Linéaire | 0.625 | 0.446 | 0.325 | 0.530 |
+| Arbre de Décision | 0.376 | 0.420 | 0.637 | 0.489 |
+| Random Forest | 0.307 | 0.327 | 0.778 | 0.732 |
+| **XGBoost ✅** | **0.286** | **0.303** | **0.812** | **0.773** |
+
+> **V1** : 184 810 observations — variable cible : valeur d'un bien individuel  
+> **V2** : 45 317 dossiers — variable cible : total des garanties par dossier  
+> Le modèle **XGBoost V2** est retenu comme modèle final **(R² = 0.773)**
 
 ---
 
 ## 🗂️ Structure du Projet
 
 ```
-Deploiement_Garantie_ACEP/
+Deploiement_Garantie_Credit/
 │
 ├── app/
-│   ├── streamlit_app.py         # Interface utilisateur Streamlit
-│   └── preprocessing.py         # Pipeline de prétraitement
-│
-├── api/
-│   └── main.py                  # API FastAPI (endpoints REST)
+│   ├── streamlit_app.py         # Interface utilisateur Streamlit V2
+│   └── preprocessing.py         # Pipeline de prétraitement V2
 │
 ├── models/
-│   ├── xgboost_model.pkl        # Modèle XGBoost entraîné
+│   ├── xgboost_model.pkl        # Modèle XGBoost V2 entraîné
 │   ├── scaler.pkl               # StandardScaler (fitté sur X_train)
-│   ├── feature_columns.pkl      # Liste ordonnée des 24 features
-│   ├── garantie_freq_map.pkl    # Frequency encoding (572 types)
+│   ├── feature_columns.pkl      # Liste ordonnée des 25 features
+│   ├── garantie_freq_map.pkl    # Frequency encoding (237 types)
 │   ├── colonnes_a_scaler.pkl    # Colonnes à standardiser
-│   └── metadata.json            # Méta-informations du modèle
+│   └── fuzzy_references.pkl     # Références Fuzzy Matching (94 refs)
 │
 ├── scripts/
 │   ├── save_artifacts.py        # Script de sauvegarde des artefacts
 │   └── test_coherence.py        # Script de validation du modèle
-│
-├── assets/
-│   └── logo_acep.png            # Logo ACEP
 │
 ├── data/                        # ⚠️ Non versionné – données confidentielles
 │
@@ -93,7 +101,7 @@ Deploiement_Garantie_ACEP/
 
 ---
 
-## 🔧 Variables Utilisées
+## 🔧 Variables Utilisées — V2
 
 ### Variables numériques (standardisées)
 | Variable | Description |
@@ -102,11 +110,12 @@ Deploiement_Garantie_ACEP/
 | `DUREE_CREDIT` | Durée du crédit (mois) |
 | `ANCIENNETE_CLIENT_JOUR_CREDIT` | Ancienneté client au moment du crédit (jours) |
 | `LOG_MONTANT_CREDIT` | Log du montant de crédit (après winsorisation) |
+| `NB_GARANTIES` | Nombre de biens proposés en garantie ← **NOUVEAU V2** |
 
 ### Variables catégorielles (encodées)
 | Variable | Encodage | Détail |
 |----------|----------|--------|
-| `LIBELLE_GARANTIE` | Frequency encoding | 572 types de garantie |
+| `GARANTIE_PRINCIPALE` | Frequency encoding | 237 types après Fuzzy Matching |
 | `GENRE_DU_CLIENT` | One-hot | MASCULIN, SOCIETE |
 | `TYPE_EMPRUNTEUR` | One-hot | TPE |
 | `PROPRIETAIRE_DE_LA_GARANTIE` | One-hot | OUI |
@@ -114,26 +123,38 @@ Deploiement_Garantie_ACEP/
 
 ---
 
-## 📐 Pipeline de Prétraitement
+## 📐 Pipeline de Prétraitement V2
 
 ```
 Données brutes (agent de crédit)
+        ↓
+Saisie de N biens en garantie (1 à 10)
+        ↓
+Fuzzy Matching → harmonisation des libellés
+  ex: MOTOYCLE → MOTOCYCLETTE
+  ex: FRIGIDAIRE → REFRIGERATEUR
+  ex: TELE → TELEVISEUR
         ↓
 Calcul ancienneté : (DATE_ACCORD - DATE_ADHESION) en jours
         ↓
 log(MONTANT_CREDIT) → LOG_MONTANT_CREDIT
         ↓
-Frequency encoding → LIBELLE_GARANTIE_FREQ
+NB_GARANTIES = nombre de biens proposés
+        ↓
+Frequency encoding → LIBELLE_GARANTIE_FREQ (garantie principale)
         ↓
 One-hot encoding (GENRE, TYPE_EMPRUNTEUR, PROPRIETAIRE, PROFESSION)
         ↓
-Alignement sur feature_columns.pkl (24 colonnes dans l'ordre exact)
+Alignement sur feature_columns.pkl (25 colonnes)
         ↓
-StandardScaler.transform() [4 colonnes numériques]
+StandardScaler.transform() [5 colonnes numériques]
         ↓
-XGBoost.predict() → LOG_MONTANT_GARANTIE
+XGBoost.predict() → LOG_TOTAL_GARANTIES
         ↓
-exp(LOG_MONTANT_GARANTIE) → Montant de garantie en FCFA
+exp(LOG_TOTAL_GARANTIES) → Total garanties en FCFA
+        ↓
+Ratio = Total / Montant crédit × 100
+→ Couverture suffisante si ratio ≥ 100%
 ```
 
 ---
@@ -143,8 +164,8 @@ exp(LOG_MONTANT_GARANTIE) → Montant de garantie en FCFA
 ### 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/GMeless/ACEP-Garantie-Prediction.git
-cd ACEP-Garantie-Prediction
+git clone https://github.com/GMeless/Garantie-Credit-Prediction.git
+cd Garantie-Credit-Prediction
 ```
 
 ### 2. Créer un environnement virtuel
@@ -182,29 +203,39 @@ pandas==3.0.2
 numpy==2.4.4
 openpyxl==3.1.5
 xlrd==2.0.2
+rapidfuzz==3.14.5
 ```
+
+---
+
+## ✅ Nouveautés V2
+
+| Nouveauté | Description |
+|-----------|-------------|
+| Modèle agrégé | Prédit le total des garanties par dossier |
+| NB_GARANTIES | Nouvelle variable explicative clé |
+| Fuzzy Matching amélioré | 94 références, seuil 55% |
+| Multi-garanties | Jusqu'à 10 biens par dossier |
+| Indicateur couverture | ✅ Suffisante / ⚠️ Insuffisante |
+| Ratio médian réel | 108.7% du crédit |
 
 ---
 
 ## ✅ Tests de cohérence validés
 
-```bash
-python scripts/test_coherence.py
-```
-
-| Test | Résultat |
-|------|----------|
-| Garantie croît avec le crédit | ✅ Confirmé |
-| Hiérarchie par type de garantie | ✅ CAMION > MOTO > SALON > TÉLÉ |
-| Client fidèle = garantie ajustée | ✅ Logique métier ACEP |
-| Ratio médian réel ACEP | ✅ 19.8% (base : 184 810 obs.) |
+| Test | V1 | V2 |
+|------|----|----|
+| Garantie croît avec le crédit | ✅ | ✅ |
+| Hiérarchie par type de garantie | ✅ | ✅ |
+| Ratio médian cohérent | 19.8% (par bien) | 108.7% (par dossier) |
+| Couverture suffisante détectée | ❌ | ✅ |
 
 ---
 
 ## ⚠️ Données confidentielles
 
 Les données brutes utilisées pour l'entraînement sont **strictement confidentielles**
-et appartiennent exclusivement à **ACEP Burkina Faso**.  
+et appartiennent exclusivement à l'institution de microfinance partenaire.  
 Elles ne sont **pas incluses** dans ce dépôt public.
 
 ---
@@ -213,7 +244,7 @@ Elles ne sont **pas incluses** dans ce dépôt public.
 
 **GNAGNE MELESS M.**  
 Master 2 Ingénierie Data — ISM Paris  
-Promotion **ISMD 26** — Soutenance 2024 | Mise à jour déploiement 2026
+Promotion **ISMD 26** — Soutenance 2024 | Mise à jour 2026
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Meless%20M.%20Gnagne-blue?logo=linkedin)](https://www.linkedin.com/in/meless-m-gnagne-21261a196/)
 [![Email](https://img.shields.io/badge/Email-mgmeless%40gmail.com-red?logo=gmail)](mailto:mgmeless@gmail.com)
