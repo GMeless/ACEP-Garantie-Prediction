@@ -336,4 +336,4 @@ Toute reproduction, modification ou utilisation commerciale est **interdite** sa
 
 ---
 
-**Status:** ✅ Production-ready (2026) | **Last Updated:** Juillet 2026
+**Status:** ✅ Production-ready (2026) | **Last Updated:** Avril 2026
